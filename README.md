@@ -1,104 +1,24 @@
 # HubSpot MCP Server
 
-A simple MCP server for interacting with the HubSpot API, specifically focused on contacts functionality.
+A Model Context Protocol server that provides access to the HubSpot API. This server enables LLMs to interact with HubSpot contacts, deals, and engagement data.
 
-## Features
+## Components
 
-- Get contacts by ID (supports both string and integer format)
-- Get contacts by email
-- Get deals by ID
-- Get contact deals
-- Get deal contacts
-- Contact engagement analytics
-- Search contacts
-- Contact schema information
-- Deal schema information
+### Tools
 
-## Setup
+The server implements several tools organized by category:
 
-1. Clone this repository
-2. Install dependencies:
-
-```bash
-uv pip install -e .
-```
-
-3. Set your HubSpot API key as an environment variable:
-
-```bash
-export HUBSPOT_API_KEY=your_hubspot_api_key
-```
-
-## Usage
-
-### Running with the MCP CLI
-
-You can run the server using the MCP CLI:
-
-```bash
-mcp dev server.py
-```
-
-### Running directly
-
-Alternatively, you can run it directly:
-
-```bash
-python main.py
-```
-
-### Installing with Claude Desktop
-
-To install the server with Claude Desktop:
-
-```bash
-mcp install server.py
-```
-
-### MCP Client Configuration
-
-Add this to your MCP client configuration:
-
-```json
-{
-  "mcpServers": {
-    "hubspot": {
-      "command": "uv",
-      "env": {
-        "HUBSPOT_API_KEY": "your_hubspot_api_key"
-      },
-      "args": [
-        "--directory",
-        "hubspot-mcp-server",
-        "run",
-        "server.py"
-      ]
-    }
-  }
-}
-```
-
-## HubSpot API Key
-
-You'll need a HubSpot API key to use this server. You can get one by:
-
-1. Creating a HubSpot Developer account
-2. Creating a private app with contacts permissions
-3. Using the generated API key
-
-## Tools
-
-### Contact Tools
-- `get_contact_by_id`: Retrieve a contact by their HubSpot ID. Accepts both string IDs (e.g., "108921304388") and integer IDs, with automatic type conversion.
+#### Contact Tools
+- `get_contact_by_id`: Retrieve a contact by their HubSpot ID (supports both string and integer IDs)
 - `get_contact_by_email`: Find a contact by their email address
 - `search_contacts`: Search for contacts based on property criteria
 
-### Deal Tools
+#### Deal Tools
 - `get_deal_by_id`: Retrieve a deal by its HubSpot ID
 - `get_contact_deals`: Get all deals associated with a contact
 - `get_deal_contacts`: Get all contacts associated with a deal
 
-### Contact Engagement Tools
+#### Engagement Tools
 - `get_latest_marketing_campaign`: Get information about recent marketing campaigns
 - `get_campaign_engagement`: Get contacts who engaged with a specific campaign
 - `get_page_visits`: Get contacts who visited a specific page
@@ -106,79 +26,126 @@ You'll need a HubSpot API key to use this server. You can get one by:
 - `get_scheduled_meetings`: Get meetings scheduled within a time period
 - `get_meeting_details`: Get detailed information about a specific meeting
 
-All tools return structured error responses with an `error` field instead of raising exceptions when issues occur, making them more robust for integration.
-
-## Resources
+### Resources
 
 - `hubspot://contacts/schema`: Information about the contact object structure
 - `hubspot://deals/schema`: Information about the deal object structure
 
-## Testing
+## Configuration
 
-The server includes a comprehensive test suite to ensure functionality works correctly.
+The server requires the following configuration:
 
-### Installing Test Dependencies
+- `HUBSPOT_API_KEY` (required): Your HubSpot API key from a private app with appropriate permissions
 
-```bash
-uv pip install -e ".[test]"
+## Quickstart
+
+### Install
+
+#### Claude Desktop
+
+On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+
+##### Development Configuration
+
+```json
+"mcpServers": {
+  "hubspot": {
+    "command": "uv",
+    "env": {
+      "HUBSPOT_API_KEY": "your_hubspot_api_key"
+    },
+    "args": [
+      "--directory",
+      "{{PATH_TO_REPO}}",
+      "run",
+      "hubspot-mcp-server"
+    ]
+  }
+}
 ```
 
-### Running Tests
+Replace `{{PATH_TO_REPO}}` with the path to your cloned repository and `your_hubspot_api_key` with your actual HubSpot API key.
+
+## Development
+
+### Building and Publishing
+
+To prepare the package for distribution:
+
+1. Sync dependencies and update lockfile:
+
+```bash
+uv sync
+```
+
+2. Build package distributions:
+
+```bash
+uv build
+```
+
+This will create source and wheel distributions in the `dist/` directory.
+
+3. Publish to PyPI:
+
+```bash
+uv publish
+```
+
+Note: You'll need to set PyPI credentials via environment variables or command flags:
+
+- Token: `--token` or `UV_PUBLISH_TOKEN`
+- Or username/password: `--username`/`UV_PUBLISH_USERNAME` and `--password`/`UV_PUBLISH_PASSWORD`
+
+### Testing
+
+Install test dependencies:
+
+```bash
+uv sync --extra test
+```
+
+Run tests:
 
 ```bash
 # Run all tests
 pytest
 
-# Run specific test file
-pytest tests/test_hubspot_contacts.py
-
 # Run with coverage
 pytest --cov=server
 ```
 
-The test suite covers:
-- Contact lookup functionality by ID and email
-- Deal lookup and management functionality
-- Contact engagement analytics
-- Error handling for API responses
-- MCP server configuration
-- API communication with HubSpot
-- Type handling for IDs (both string and integer formats)
+### Debugging
 
-## Code Quality
+Since MCP servers run over stdio, debugging can be challenging. For the best debugging
+experience, we strongly recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector).
 
-This project uses [Ruff](https://docs.astral.sh/ruff/) for code formatting and linting.
-
-### Installing Development Dependencies
+You can launch the MCP Inspector via [`npm`](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) with this command:
 
 ```bash
-uv pip install -e ".[dev]"
+npx @modelcontextprotocol/inspector uv --directory {{PATH_TO_REPO}} run hubspot-mcp-server
 ```
 
-### Running Linting and Formatting
+Upon launching, the Inspector will display a URL that you can access in your browser to begin debugging.
 
-You can use the provided script to run all formatting and linting in one step:
+## Technical Details
 
-```bash
-./lint.sh
-```
+### HubSpot API Integration
 
-Or run the commands individually:
+- **API Version**: v3
+- **Endpoints**: 
+  - Contacts: `/crm/v3/objects/contacts`
+  - Deals: `/crm/v3/objects/deals`
+  - Marketing: `/marketing/v3/campaigns`
+  - Analytics: `/analytics/v2`
+  - Meetings: `/meetings/v1`
+- **Authentication**: API Key in Bearer token
 
-```bash
-# Format code
-ruff format .
+### Getting a HubSpot API Key
 
-# Check code
-ruff check .
+You'll need a HubSpot API key to use this server. To get one:
 
-# Apply automatic fixes
-ruff check --fix .
-```
-
-The Ruff configuration is defined in `pyproject.toml` and enforces:
-- PEP 8 style guidelines
-- Import sorting
-- Type annotations
-- Code complexity checks
-- And more
+1. Create a HubSpot Developer account
+2. Create a private app with required permissions
+3. Use the generated API key
