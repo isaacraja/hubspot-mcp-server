@@ -20,7 +20,7 @@ A simple MCP server for interacting with the HubSpot API, specifically focused o
 2. Install dependencies:
 
 ```bash
-pip install -e .
+uv pip install -e .
 ```
 
 3. Set your HubSpot API key as an environment variable:
@@ -53,6 +53,29 @@ To install the server with Claude Desktop:
 
 ```bash
 mcp install server.py
+```
+
+### MCP Client Configuration
+
+Add this to your MCP client configuration:
+
+```json
+{
+  "mcpServers": {
+    "hubspot": {
+      "command": "uv",
+      "env": {
+        "HUBSPOT_API_KEY": "your_hubspot_api_key"
+      },
+      "args": [
+        "--directory",
+        "hubspot-mcp-server",
+        "run",
+        "server.py"
+      ]
+    }
+  }
+}
 ```
 
 ## HubSpot API Key
@@ -97,7 +120,7 @@ The server includes a comprehensive test suite to ensure functionality works cor
 ### Installing Test Dependencies
 
 ```bash
-pip install -e ".[test]"
+uv pip install -e ".[test]"
 ```
 
 ### Running Tests
@@ -129,7 +152,7 @@ This project uses [Ruff](https://docs.astral.sh/ruff/) for code formatting and l
 ### Installing Development Dependencies
 
 ```bash
-pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 ### Running Linting and Formatting
