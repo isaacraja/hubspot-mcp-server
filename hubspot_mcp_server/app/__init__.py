@@ -1,0 +1,3 @@
+"""
+HubSpot MCP Server App
+"""
