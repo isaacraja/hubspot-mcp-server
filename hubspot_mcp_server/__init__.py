@@ -1,3 +1,0 @@
-"""
-HubSpot MCP Server
-"""

@@ -9,7 +9,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 sys.path.append(".")  # Add the root directory to the path
-from server import (
+from hubspot_mcp_server.server import (
     get_campaign_engagement,
     get_contact_analytics,
     get_latest_marketing_campaign,

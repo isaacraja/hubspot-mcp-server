@@ -1,15 +1,13 @@
 """
-Unit tests for HubSpot contact functions in the MCP server
+Tests for HubSpot contacts functionality
 """
 
 import os
-import sys
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-sys.path.append(".")  # Add the root directory to the path
-from server import get_contact_by_email, get_contact_by_id, get_contact_schema
+from hubspot_mcp_server.server import get_contact_by_email, get_contact_by_id, get_contact_schema
 
 # Sample test data
 SAMPLE_CONTACT = {

@@ -3,17 +3,17 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "hubspot_mcp_server"
-version = "0.1.0"
+name = "hubspot-mcp-server"
+version = "0.1.1"
 authors = [
-    {name = "Isaac Raja", email = "isaac.raja@travelopia.com"},
+    {name = "Isaac Raja", email = "isaacraja@gmail.com"},
 ]
 description = "A simple MCP server for interacting with the HubSpot API"
 readme = "README.md"
 requires-python = ">=3.10"
+license = "MIT"
 classifiers = [
     "Programming Language :: Python :: 3",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -27,13 +27,18 @@ test = [
     "pytest-cov>=4.1.0",
     "pytest-mock>=3.10.0",
     "requests-mock>=1.10.0",
+    "pytest-asyncio>=0.23.0",
 ]
 dev = [
     "ruff>=0.11.0",
 ]
 
+[project.scripts]
+hubspot-mcp-server = "hubspot_mcp_server.server:mcp.run"
+
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
+include = ["hubspot_mcp_server*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -45,13 +50,16 @@ markers = [
     "integration: mark a test as an integration test",
 ]
 addopts = "-v --strict-markers"
-asyncio_mode = "auto"
+
+[tool.pytest-asyncio]
+mode = "auto"
 
 [tool.ruff]
 # E and F are enabled by default
 target-version = "py39"
 line-length = 100
 output-format = "grouped"
+src = ["src"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "ANN"]
@@ -64,9 +72,9 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 # Ignore missing return type annotations in tests
 "tests/*" = ["ANN001", "ANN201", "ANN204"]
 # Ignore missing parameter type annotations in server.py
-"server.py" = ["ANN001", "W293", "E501"]
+"src/hubspot_mcp_server/server.py" = ["ANN001", "W293", "E501"]
 # Ignore whitespace in blank lines
-"hubspot_mcp_server/app/main.py" = ["W293"]
+"src/hubspot_mcp_server/main.py" = ["W293"]
 
 [tool.ruff.lint.isort]
 combine-as-imports = true

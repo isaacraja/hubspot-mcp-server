@@ -3,13 +3,11 @@ Tests for HubSpot API communication functionality
 """
 
 import os
-import sys
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-sys.path.append(".")  # Add the root directory to the path
-from server import _get_contact_by_id, get_api_key, get_contact_by_email, get_headers
+from hubspot_mcp_server.server import _get_contact_by_id, get_api_key, get_contact_by_email, get_headers
 
 
 # Tests for API utility functions
@@ -30,7 +28,7 @@ class TestAPIUtils:
 
     def test_get_headers(self):
         """Test headers construction"""
-        with patch("server.get_api_key", return_value="test_key"):
+        with patch("hubspot_mcp_server.server.get_api_key", return_value="test_key"):
             headers = get_headers()
             assert headers["Authorization"] == "Bearer test_key"
             assert headers["Content-Type"] == "application/json"
@@ -94,7 +92,7 @@ class TestAPIRequests:
 
         with (
             patch("httpx.AsyncClient") as mock_client,
-            patch("server.get_headers", return_value=expected_headers),
+            patch("hubspot_mcp_server.server.get_headers", return_value=expected_headers),
         ):
             # Set up the mock to return a success response
             mock_client.return_value.__aenter__.return_value.get = mock_get

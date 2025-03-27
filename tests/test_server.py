@@ -3,10 +3,8 @@ Unit tests for server initialization and configuration
 """
 
 import inspect
-import sys
 
-sys.path.append(".")  # Add the root directory to the path
-import server
+from hubspot_mcp_server import server
 
 
 def test_server_has_get_contact_by_id_function():

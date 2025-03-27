@@ -1,15 +1,15 @@
 """
-Unit tests for HubSpot deal functions in the MCP server
+Tests for HubSpot deals functionality
 """
 
 import os
 import sys
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
 sys.path.append(".")  # Add the root directory to the path
-from server import get_contact_deals, get_deal_by_id, get_deal_contacts, get_deals_schema
+from hubspot_mcp_server.server import get_contact_deals, get_deal_by_id, get_deal_contacts, get_deals_schema
 
 # Sample test data
 SAMPLE_DEAL = {

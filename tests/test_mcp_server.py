@@ -2,11 +2,10 @@
 Tests for the MCP server configuration and initialization
 """
 
-import sys
 import unittest
 from unittest.mock import patch
 
-sys.path.append(".")  # Add the root directory to the path
+from hubspot_mcp_server import server
 
 
 class TestMCPServer(unittest.TestCase):
@@ -21,10 +20,6 @@ class TestMCPServer(unittest.TestCase):
 
     def test_tool_registration(self):
         """Test that the tools are properly registered"""
-        # Skip the internal registry test since we can't access it directly
-        # Instead, make sure our decorated functions exist in the module
-        import server
-
         # Check that our tool functions exist in the module
         # Basic contact tools
         assert hasattr(server, "get_contact_by_id")
@@ -50,8 +45,6 @@ class TestMCPServer(unittest.TestCase):
 
     def test_resource_registration(self):
         """Test that the resources are properly registered"""
-        import server
-
         # Check that our resources exist and return the expected content
         contact_schema = server.get_contact_schema()
         assert isinstance(contact_schema, str)
@@ -64,9 +57,6 @@ class TestMCPServer(unittest.TestCase):
 
 def test_main_execution():
     """Test that main can execute without errors"""
-    # Import the server module
-    import server
-
     # Patch the mcp.run method to prevent actual server startup
     with patch.object(server.mcp, "run") as mock_run:
         # Call the main block code
