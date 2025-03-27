@@ -1,5 +1,8 @@
 # HubSpot MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@isaacraja/hubspot-mcp-server)](https://smithery.ai/server/@isaacraja/hubspot-mcp-server)
+
+A Model Context Protocol server that provides access to the HubSpot API. This server enables LLMs to interact with HubSpot contacts, deals, and engagement data.
 A Model Context Protocol server that provides access to the HubSpot API. This server enables LLMs to interact with HubSpot contacts, deals, and engagements.
 
 ## Components
@@ -52,6 +55,34 @@ Add this to your Claude Desktop configuration file:
 On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
+##### Installing via Smithery
+
+To install HubSpot MCP Server for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@isaacraja/hubspot-mcp-server):
+
+```bash
+npx -y @smithery/cli install @isaacraja/hubspot-mcp-server --client claude
+```
+
+##### Development Configuration
+
+```json
+"mcpServers": {
+  "hubspot": {
+    "command": "uv",
+    "env": {
+      "HUBSPOT_API_KEY": "your_hubspot_api_key"
+    },
+    "args": [
+      "--directory",
+      "{{PATH_TO_REPO}}",
+      "run",
+      "hubspot-mcp-server"
+    ]
+  }
+}
+```
+
+Replace `{{PATH_TO_REPO}}` with the path to your cloned repository and `your_hubspot_api_key` with your actual HubSpot API key.
 #### Development/Unpublished Server Configuration
 
 ```json
